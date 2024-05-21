@@ -6,13 +6,16 @@
 .idea/
 
 # Binary file
-direkt-comment-socket-svc
-direktCommentSocketSvc
+yourSixRobot
+
+# DB files
+dbfiles/
 
 # Temporary stuff
 tmp/
 tmp/runner-build-errors.log
 scratchpad
+yoursix-programming-assignment_backend.pdf
 
 # Ignore `bin` dir etc
 bin/
