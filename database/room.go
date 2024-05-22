@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+const dbFiles = "./dbfiles/"
+
 // Note 1: In a real world application I would have used an RDS here,
 // but cannot since the driver is not in the standard package
 // Note 2: Here I'm just writing the file to disk, but in the real world
@@ -32,7 +34,7 @@ func ChangeRoom(robot types.Robot) error {
 
 // GetRoom validates that the starting position of the robot is not out of bounds
 func GetRoom(roomID int) (types.Room, error) {
-	fileName := fmt.Sprintf("./dbfiles/%v.json", roomID)
+	fileName := fmt.Sprintf("%v%v.json", dbFiles, roomID)
 	dat, err := os.ReadFile(fileName)
 	if err != nil {
 		return types.Room{}, fmt.Errorf("error in GetRoom, cannot read file %v: %w", fileName, err)
@@ -53,7 +55,7 @@ func SaveRoom(room types.Room) error {
 		return fmt.Errorf("error in SaveRoom marshaling %+v: %w", room, err)
 	}
 
-	fileName := fmt.Sprintf("./dbfiles/%v.json", room.ID)
+	fileName := fmt.Sprintf("%v%v.json", dbFiles, room.ID)
 	file, errs := os.Create(fileName)
 	if errs != nil {
 		return fmt.Errorf("error in SaveRoom, could not create file for %+v: %w", room, err)

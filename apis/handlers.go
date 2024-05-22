@@ -15,9 +15,14 @@ import (
 // RoomHandler initializes a new room with height and width.
 // The new room is saved to the DB and room ID is returned
 func RoomHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPost || r.Method == http.MethodOptions {
 		log.Printf("error in RoomHandler: called with %v, returning Bad request", r.Method)
 		respondWithError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.Method == http.MethodOptions {
+		getCorsOptions(w, r)
 		return
 	}
 
@@ -57,9 +62,14 @@ func RoomHandler(w http.ResponseWriter, r *http.Request) {
 
 // StartRobotHandler positions the robot in the room, facing a directions
 func StartRobotHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
+	if r.Method != http.MethodPut || r.Method == http.MethodOptions {
 		log.Printf("error in StartRobotHandler: called with %v, returning Bad request", r.Method)
 		respondWithError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.Method == http.MethodOptions {
+		getCorsOptions(w, r)
 		return
 	}
 
@@ -107,9 +117,14 @@ func StartRobotHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func MoveRobotHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPut {
+	if r.Method != http.MethodPut || r.Method == http.MethodOptions {
 		log.Printf("error in MoveRobotHandler: called with %v, returning Bad request", r.Method)
 		respondWithError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.Method == http.MethodOptions {
+		getCorsOptions(w, r)
 		return
 	}
 
