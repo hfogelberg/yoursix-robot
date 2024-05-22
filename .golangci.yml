@@ -1,7 +1,5 @@
-# Options for analysis running.
-# Note: go version from mod file is used
-# For linting we use golangci-lint
-# See docs for how to tweak this file and use linting: https://golangci-lint.run
+# Using golangci-lint
+# https://golangci-lint.run
 
 run:
   # Don't check test files
@@ -21,41 +19,3 @@ output:
   print-linter-name: true
   uniq-by-line: true
   sort-results: true
-
-# Override default linters and list the linters we want to use
-# The used linters is obviously WIP
-# For a full list of linters and docs for them see https://golangci-lint.run/usage/linters/
-linters:
-  disable-all: true
-  enable:
-    - asciicheck        # check for non-ascii identifiers
-    - bidichk           # dangerous unicode character sequences
-    - bodyclose         # checks that http body is closed
-    - dogsled           # assignments with too many blank identifiers
-    # should be checked, but outcommented since it would lead to too much refactoring
-    # - dupl              # detects cloned code
-    - errcheck          # unchecked errors
-    - errchkjson        # unsupported types in json
-    - execinquery       # checks if exec is used instead of sql query
-    # should be checked, but outcommented since it would lead to too much refactoring
-    #- funlen            # check for long functions
-    - gochecknoglobals  # check that there are no global variables
-    - gocognit          # checks the cognitive complexity of functions
-    - goconst           # find repeated strings that should be constants
-    - godox             # check comments for TODO, FIX etc
-    - gofmt             # check if code is go-formated
-    - gomnd             # check for magic numbers
-    - gosec             # find potential security issues
-    - gosimple          # simplify syntax
-    - govet             # check for suspicious constructs
-    - ineffassign       # assigned unused variables
-    - misspell          # typos in comments
-    - nestif            # too many levels in nested if-statements
-    - nilerr            # check that nil-error isn't returned after checking if error is not nil
-    - sqlclosecheck     # checks that sql rows are closed
-    - staticcheck       # various rules for static checks
-    - typecheck         # type checking
-    - unparam           # report unused function params
-    - unused            # unused functions and types
-    - wastedassign      # finds wasted assignment statements
-    - whitespace        # leading and trailing whitespace

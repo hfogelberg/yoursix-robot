@@ -14,7 +14,7 @@ import (
 // non-standard packages
 
 func ChangeRoom(robot types.Robot) error {
-	room, err := GetRoom(robot)
+	room, err := GetRoom(robot.RoomID)
 	if err != nil {
 		return fmt.Errorf("error in ChangeRoom: %w", err)
 	}
@@ -31,8 +31,8 @@ func ChangeRoom(robot types.Robot) error {
 }
 
 // GetRoom validates that the starting position of the robot is not out of bounds
-func GetRoom(robot types.Robot) (types.Room, error) {
-	fileName := fmt.Sprintf("./dbfiles/%v.json", robot.RoomID)
+func GetRoom(roomID int) (types.Room, error) {
+	fileName := fmt.Sprintf("./dbfiles/%v.json", roomID)
 	dat, err := os.ReadFile(fileName)
 	if err != nil {
 		return types.Room{}, fmt.Errorf("error in GetRoom, cannot read file %v: %w", fileName, err)
@@ -46,7 +46,7 @@ func GetRoom(robot types.Robot) (types.Room, error) {
 	return room, nil
 }
 
-// Save room creates or updates a JSON file for a room with options position and direction of the robot
+// SaveRoom creates or updates a JSON file for a room with options position and direction of the robot
 func SaveRoom(room types.Room) error {
 	roomJSON, err := json.Marshal(room)
 	if err != nil {

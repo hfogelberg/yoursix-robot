@@ -2,12 +2,14 @@ package apis
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/hfogelberg/yourSixRobot/database"
 	"github.com/hfogelberg/yourSixRobot/types"
 	"log"
 	"math"
 	"math/rand/v2"
 	"net/http"
+	"strings"
 )
 
 // RoomHandler initializes a new room with height and width.
@@ -83,7 +85,7 @@ func StartRobotHandler(w http.ResponseWriter, r *http.Request) {
 		Direction: robotIn.Direction,
 	}
 
-	room, err := database.GetRoom(robot)
+	room, err := database.GetRoom(robot.RoomID)
 	if err != nil {
 		log.Printf("error in StartRobotHandler: %v", err)
 		respondWithError(w, http.StatusInternalServerError)
@@ -102,4 +104,50 @@ func StartRobotHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func MoveRobotHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		log.Printf("error in MoveRobotHandler: called with %v, returning Bad request", r.Method)
+		respondWithError(w, http.StatusMethodNotAllowed)
+		return
+	}
+
+	var robotIn types.MoveRobotIn
+	decoder := json.NewDecoder(r.Body)
+	defer r.Body.Close()
+	if err := decoder.Decode(&robotIn); err != nil {
+		log.Printf("error in MoveRobotHandler body: %v", err.Error())
+		respondWithError(w, http.StatusBadRequest)
+		return
+	}
+
+	robotIn.Path = strings.ToUpper(robotIn.Path)
+
+	if err := moveInputIsValid(robotIn); err != nil {
+		log.Printf("error in MoveRobotHandler: %v", err)
+		respondWithError(w, http.StatusBadRequest)
+		return
+	}
+
+	room, err := database.GetRoom(robotIn.RoomID)
+	if err != nil {
+		log.Printf("error in MoveRobotHandler: %v", err)
+		respondWithError(w, http.StatusInternalServerError)
+		return
+	}
+
+	room.Path = robotIn.Path
+
+	room, err = moveRobotAlongPath(room)
+	if err != nil {
+		log.Printf("error in MoveRobotHandler: %v", err)
+		respondWithError(w, http.StatusMisdirectedRequest)
+		return
+	}
+
+	report := fmt.Sprintf("Report: %v %v %v", room.XPosition, room.YPosition, room.Direction)
+	robotOut := types.MoveRobotOut{Report: report}
+
+	respondWithJSON(w, robotOut)
 }

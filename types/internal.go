@@ -7,6 +7,7 @@ type Room struct {
 	XPosition int
 	YPosition int
 	Direction string
+	Path      string
 }
 
 type Robot struct {

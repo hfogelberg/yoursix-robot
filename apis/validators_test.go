@@ -8,6 +8,78 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestMoveInpoutIsValid(t *testing.T) {
+	tests := []struct {
+		description     string
+		moveIn          types.MoveRobotIn
+		shouldHaveError bool
+	}{
+		{
+			description: "Movement is valid",
+			moveIn: types.MoveRobotIn{
+				RoomID: 42,
+				Path:   "LRFFRR",
+			},
+			shouldHaveError: false,
+		},
+		{
+			description: "Invalid room id",
+			moveIn: types.MoveRobotIn{
+				RoomID: -2,
+				Path:   "LRFFRR",
+			},
+			shouldHaveError: true,
+		},
+		{
+			description: "Invalid path",
+			moveIn: types.MoveRobotIn{
+				RoomID: 42,
+				Path:   "qwe",
+			},
+			shouldHaveError: true,
+		},
+	}
+
+	for _, test := range tests {
+		err := moveInputIsValid(test.moveIn)
+		// Don't check the message, just that an error is returned when it should
+		if test.shouldHaveError {
+			assert.Error(t, err)
+		} else {
+			assert.NoError(t, err)
+		}
+	}
+}
+
+func TestPathIsValid(t *testing.T) {
+	tests := []struct {
+		description string
+		path        string
+		expected    bool
+	}{
+		{
+			description: "valid path",
+			path:        "LRFFRR",
+			expected:    true,
+		},
+		{
+			description: "empty path",
+			path:        "",
+			expected:    false,
+		},
+		{
+			description: "invalid path",
+			path:        "Q&/(14",
+			expected:    false,
+		},
+	}
+
+	for _, test := range tests {
+		ok := pathIsValid(test.path)
+		assert.Equal(t, test.expected, ok)
+	}
+}
+
 func TestStartPositionIsInBounds(t *testing.T) {
 	tests := []struct {
 		description string
