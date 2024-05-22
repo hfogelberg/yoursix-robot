@@ -88,7 +88,7 @@ func StartRobotHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	robot := types.Robot{
+	robot := types.Robot{ // nolint: all
 		RoomID:    robotIn.RoomID,
 		XPosition: robotIn.XPosition,
 		YPosition: robotIn.YPosition,
